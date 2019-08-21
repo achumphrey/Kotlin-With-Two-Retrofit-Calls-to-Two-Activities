@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.*
 import com.example.kotlinwithtworetrofitcallstotwoactivities.R
+import com.example.kotlinwithtworetrofitcallstotwoactivities.common.inflate
+import com.example.kotlinwithtworetrofitcallstotwoactivities.common.loadImage
 import com.example.kotlinwithtworetrofitcallstotwoactivities.model.movie.MoviePopular
 import com.example.kotlinwithtworetrofitcallstotwoactivities.model.movie.Results
 import com.squareup.picasso.Picasso
@@ -16,8 +18,14 @@ class MovieAdapter (private val moviePopular: MoviePopular, private val listener
     : Adapter<MovieViewHolder> (){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        return MovieViewHolder(LayoutInflater.from(parent.context)
+
+        val view: View = parent.inflate(R.layout.recyclerviewer_layout, false)
+        return MovieViewHolder(view)
+
+    /*    return MovieViewHolder(LayoutInflater.from(parent.context)
             .inflate(R.layout.recyclerviewer_layout, parent, false))
+
+     */
     }
 
     override fun getItemCount(): Int {
@@ -29,9 +37,11 @@ class MovieAdapter (private val moviePopular: MoviePopular, private val listener
         holder.tvTitle.text = moviePopular.results[position].title
         holder.overView.text = moviePopular.results[position].overview
         holder.ratingBar.rating = moviePopular.results[position].vote_average.toFloat()
-        Picasso.get().load("http://image.tmdb.org/t/p/w185"
+        holder.imgView.loadImage("http://image.tmdb.org/t/p/w185" + moviePopular.results[position].poster_path)
+
+        /*Picasso.get().load("http://image.tmdb.org/t/p/w185"
                 + moviePopular.results[position]
-            .poster_path).into(holder.imgView)
+            .poster_path).into(holder.imgView)*/
 
         holder.bind(moviePopular.results[position], listener)
     }

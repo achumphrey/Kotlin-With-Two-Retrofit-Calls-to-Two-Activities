@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlinwithtworetrofitcallstotwoactivities.R
+import com.example.kotlinwithtworetrofitcallstotwoactivities.common.inflate
 import com.example.kotlinwithtworetrofitcallstotwoactivities.model.gitHub.ModelRepo
 import com.example.kotlinwithtworetrofitcallstotwoactivities.model.movie.MoviePopular
 import com.example.kotlinwithtworetrofitcallstotwoactivities.model.movie.Results
@@ -18,9 +19,12 @@ class RepoAdapter (private val gitRepoModel: List<ModelRepo>, private val listen
 
        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoViewHolder {
 
-           return RepoViewHolder(
+           val view: View = parent.inflate(R.layout.github_repo_recyclerviewer, false)
+           return RepoViewHolder(view)
+
+           /*return RepoViewHolder(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.github_repo_recyclerviewer, parent, false))
+                    .inflate(R.layout.github_repo_recyclerviewer, parent, false))*/
         }
 
         override fun getItemCount(): Int {
