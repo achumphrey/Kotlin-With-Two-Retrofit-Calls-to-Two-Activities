@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kotlinwithtworetrofitcallstotwoactivities.ClientInterface
 import com.example.kotlinwithtworetrofitcallstotwoactivities.Constants
 import com.example.kotlinwithtworetrofitcallstotwoactivities.R
+import com.example.kotlinwithtworetrofitcallstotwoactivities.common.enqueue
 import com.example.kotlinwithtworetrofitcallstotwoactivities.model.movie.MoviePopular
 import com.example.kotlinwithtworetrofitcallstotwoactivities.model.movie.Results
 import com.example.kotlinwithtworetrofitcallstotwoactivities.network.movie.MovieRetrofitInstance
@@ -24,8 +25,44 @@ class MoviesActivity : AppCompatActivity() {
 
         val movieRequest =
             MovieRetrofitInstance().retrofitInstance.create(ClientInterface::class.java)
+
         val call = movieRequest.getmoviesPopular(Constants.API_KEY)
 
+        // this is the extension function version of the callback enqueue
+
+        call.enqueue {
+            onResponse = {
+                mdRecords -> val res = mdRecords.body()
+
+                // initialize the adapter
+                val adapter: MovieAdapter = MovieAdapter(res!!, object : OnMovieClickLister {
+                    override fun onMovieClick(results: Results) {
+
+                        Log.d("CLICKEDITEM", results.title)
+                    }
+                })
+                rv_list.layoutManager = LinearLayoutManager(this@MoviesActivity)
+                rv_list.adapter = adapter
+            }
+
+            onFailure = {
+                error -> Log.d("Fail", error?.message)
+            }
+        }
+
+   /*
+        call.enqueue {
+            onResponse = {
+                    dominoes ->  val res = dominoes.body()
+            }
+            onFailure = {
+                    error -> Log.d("Fail", error.message)
+            }
+        }
+        */
+
+        /*
+        //this is the method without the extension function
         call.enqueue(object : Callback<MoviePopular> {
 
             override fun onFailure(call: Call<MoviePopular>, t: Throwable) {
@@ -44,7 +81,9 @@ class MoviesActivity : AppCompatActivity() {
                 })
                 rv_list.layoutManager = LinearLayoutManager(this@MoviesActivity)
                 rv_list.adapter = adapter
-            }
-        })
+
+            }// END ONRESPONSE
+        })// END CALL.ENQUEUE
+        */
     }
 }
